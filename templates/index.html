@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GeoChart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/chartjs-chart-geo@3.9.0/build/index.umd.min.js"></script>
+  </head>
+  <body>
+    
+    <div>
+        <canvas id="myChart"></canvas>
+    </div>
+    
+    <script>
+
+        const url = 'https://raw.githubusercontent.com/samayo/country-json/master/src/country-by-population.json';
+        //const url = 'https://unpkg.com/world-atlas@2.0.2/countries-50m.json'; 
+        let countries = [];
+        let country_by_population = [];
+
+        fetch(url).then((result) => result.json()).then((datapoint) => {
+            const countries = ChartGeo.topojson.feature(datapoint, datapoint.forEach(element => {
+                return element.country;
+            })).features;
+            
+            console.log(countries);
+                
+                
+            // setup 
+            const data = {
+                labels: [10,20,0, 40],
+                datasets: [{
+                    label: 'Total population',
+                    data: [10, 20, 30, 40],        
+                }]
+            };
+
+            // config 
+            const config = {
+                type: 'choropleth',
+                data, 
+                options: {
+                    scales:{
+                        xy: {
+                            projection: 'equalEarth'
+                        }
+                    }
+                }
+            };
+
+            // render init block
+            const myChart = new Chart(
+                document.getElementById('myChart'),
+                config
+            );    
+        });
+    </script>
+  </body>
+</html>
